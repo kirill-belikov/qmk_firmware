@@ -4,9 +4,9 @@
     "processor": "STM32F072",
     "bootloader": "stm32-dfu",
     "usb": {
-        "device_version": "0.0.1",
-        "pid": "0x0287",
-        "vid": "0xFC32"
+        "pid": "0x0000",
+        "vid": "0xFEED",
+        "device_version": "0.0.1"
     },
     "diode_direction": "COL2ROW",
     "matrix_pins": {
@@ -99,5 +99,16 @@
                 {"matrix": [9, 5], "x": 11, "y": 4}
             ]
         }
+    },
+    "features": {
+        "rgblight": true
+    },
+    "ws2812": {
+        "pin": "B15"
+    },
+    "rgblight": {
+        "led_count": 72,
+        "split_count": [36, 36],
+        "sleep": true
     }
 }
