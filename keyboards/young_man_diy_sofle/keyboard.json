@@ -101,7 +101,8 @@
         }
     },
     "features": {
-        "rgblight": true
+        "rgblight": true,
+        "oled": false
     },
     "ws2812": {
         "pin": "B15"
