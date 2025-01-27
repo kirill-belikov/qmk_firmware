@@ -4,3 +4,20 @@
 
 #define SERIAL_USART_DRIVER SD2
 #define EE_HANDS
+
+// #define OLED_BRIGHTNESS 128
+
+// #define OLED_DC_PIN B6
+// #define OLED_CS_PIN B7
+
+// #define I2C_DRIVER I2CD2
+// #define I2C1_SCL_PAL_MODE 4
+// #define I2C1_SCL_PIN B6
+// #define I2C1_SDA_PAL_MODE 4
+// #define I2C1_SDA_PIN B7
+
+// #define I2C1_TIMINGR_PRESC 0U
+// #define I2C1_TIMINGR_SCLDEL 7U
+// #define I2C1_TIMINGR_SDADEL 0U
+// #define I2C1_TIMINGR_SCLH 38U
+// #define I2C1_TIMINGR_SCLL 129U

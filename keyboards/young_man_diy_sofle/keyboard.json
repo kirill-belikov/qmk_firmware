@@ -116,10 +116,12 @@
         }
     },
     "features": {
+        "command": false,
+        "console": false,
         "extrakey": true,
         "encoder": true,
         "rgblight": true,
-        "oled": true
+        "oled": false
     },
     "ws2812": {
         "pin": "B15"
