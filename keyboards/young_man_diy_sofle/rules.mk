@@ -1,0 +1,4 @@
+# OLED_ENABLE = yes
+# LTO_ENABLE = yes
+# I2C_ENABLE = yes
+# I2C_DRIVER_REQUIRED = yes

@@ -4,3 +4,24 @@
 
 #define SERIAL_USART_DRIVER SD2
 #define EE_HANDS
+
+#define MASTER_AUTO_DETECT
+
+// #define OLED_DISPLAY_128X32
+
+// #define OLED_IC OLED_IC_SSD1306
+// #define OLED_COLUMN_OFFSET 2
+
+// #define I2C_DRIVER I2CD1
+// #define I2C1_SCL_PIN B6
+// #define I2C1_SDA_PIN B7
+// #define I2C1_SCL_PAL_MODE 4
+// #define I2C1_SDA_PAL_MODE 4
+// #define I2C1_CLOCK_SPEED 100000
+// #define I2C1_DUTY_CYCLE STD_DUTY_CYCLE
+
+// #define I2C_DRIVER I2CD2
+// #define I2C2_SCL_PIN B6
+// #define I2C2_SDA_PIN B7
+// #define I2C2_SCL_PAL_MODE 4
+// #define I2C2_SDA_PAL_MODE 4

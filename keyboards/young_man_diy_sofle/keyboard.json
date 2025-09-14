@@ -122,8 +122,7 @@
         "extrakey": true,
         "encoder": true,
         "encoder_map": true,
-        "rgb_matrix": true,
-        "oled": false
+        "rgb_matrix": true
     },
     "ws2812": {
         "pin": "B15"
