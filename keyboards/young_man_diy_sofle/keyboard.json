@@ -120,6 +120,7 @@
         "console": false,
         "extrakey": true,
         "encoder": true,
+        "encoder_map": true,
         "rgblight": true,
         "oled": false
     },
@@ -129,8 +130,7 @@
     "rgblight": {
         "led_count": 72,
         "split_count": [36, 36],
-        "max_brightness": 120,
-                "sleep": true
+        "sleep": true
     },
     "rgb_matrix": {
         "driver": "ws2812",

@@ -34,8 +34,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = {ENCODER_CCW_CW(KC_VOLU, KC_VOLD), ENCODER_CCW_CW(UG_VALU, UG_VALD)},
-    [1] = {ENCODER_CCW_CW(KC_3, KC_4), ENCODER_CCW_CW(KC_5, KC_6)}, 
-    [2] = {ENCODER_CCW_CW(KC_7, KC_8), ENCODER_CCW_CW(KC_9, KC_0)}, 
+    [1] = {ENCODER_CCW_CW(KC_3,    KC_4),    ENCODER_CCW_CW(KC_5,    KC_6)}, 
+    [2] = {ENCODER_CCW_CW(KC_7,    KC_8),    ENCODER_CCW_CW(KC_9,    KC_0)}, 
     [3] = {ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______)}
 };
 #endif
@@ -45,5 +45,4 @@ bool oled_task_user(void) {
     oled_write_P(PSTR("TEST"), false);
     return false;
 }
-
 #endif
