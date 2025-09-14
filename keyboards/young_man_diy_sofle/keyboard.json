@@ -163,21 +163,21 @@
             "rainbow_moving_chevron": false,
             "rainbow_pinwheels": false,
             "raindrops": false,
-            "solid_multisplash": false,
-            "solid_reactive": false,
-            "solid_reactive_cross": false,
-            "solid_reactive_multicross": false,
-            "solid_reactive_multinexus": false,
-            "solid_reactive_multiwide": false,
-            "solid_reactive_nexus": false,
+            "solid_multisplash": true,
+            "solid_reactive": true,
+            "solid_reactive_cross": true,
+            "solid_reactive_multicross": true,
+            "solid_reactive_multinexus": true,
+            "solid_reactive_multiwide": true,
+            "solid_reactive_nexus": true,
             "solid_reactive_simple": true,
-            "solid_reactive_wide": false,
-            "solid_splash": false,
-            "splash": false,
-            "typing_heatmap": false
+            "solid_reactive_wide": true,
+            "solid_splash": true,
+            "splash": true,
+            "typing_heatmap": true
         },
         "default": {
-            "animation": "solid_reactive_simple"
+            "animation": "typing_heatmap"
         },
         "layout": [
             {"x": 96, "y": 40, "flags": 8},
