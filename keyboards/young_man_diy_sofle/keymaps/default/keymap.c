@@ -1,4 +1,7 @@
 #include QMK_KEYBOARD_H
+#include "quantum.h"
+#include "i2c_master.h"   // needed for i2c_start()
+#include "print.h"        // needed for uprintf()
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
@@ -31,6 +34,52 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
+void keyboard_post_init_user(void) {
+    // wait_ms(200);  // let OLED power up
+    // uprintf("Starting I2C scan...\n");
+
+
+    // Ensure bus is initialized
+    // i2c_init();
+
+    // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
+    //     uint8_t data = 0;
+    //     // Try to read 1 byte – many devices NACK, but responding is enough
+    //     if (i2c_receive(addr, &data, 1, 100) == I2C_STATUS_SUCCESS) {
+    //         uprintf("Found device at 0x%02X\n", addr);
+    //     }
+    // }
+
+
+    // // Ensure bus is initialized
+    // i2c_init();
+
+
+    wait_ms(200);
+    uprintf("pre-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+            palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+
+    i2c_init();
+
+    for (uint8_t addr = 0x08; addr < 0x78; addr++) {
+        uint8_t data = 0;
+        i2c_status_t res = i2c_receive(addr, &data, 1, 100);
+        uprintf("Addr 0x%02X => %d\n", addr, res);
+    }
+
+    // perform a probe (try just 0x3C)
+    uint8_t data = 0;
+    // i2c_status_t res = i2c_receive(0x3C, &data, 1, 100);
+    i2c_status_t res = i2c_receive(0x3D, &data, 1, 100);    
+    uprintf("i2c_receive => %d\n", res);
+
+    uprintf("post-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+            palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+
+
+    uprintf("Done\n");
+}
+
 #ifdef ENCODER_MAP_ENABLE
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [0] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(UG_VALU, UG_VALD)},
@@ -40,19 +89,22 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 };
 #endif
 
-#ifdef OLED_ENABLE
+// #ifdef OLED_ENABLE
 // void i2c_init(void) {
-//     gpio_set_pin_input(B6); // Try releasing special pins for a short time
+//     gpio_set_pin_input(B6);
 //     gpio_set_pin_input(B7);
-//     wait_ms(10); // Wait for the release to happen
-
-//     palSetPadMode(GPIOB, 6, PAL_MODE_ALTERNATE(4) | PAL_STM32_OTYPE_OPENDRAIN | PAL_STM32_PUPDR_PULLUP); // Set B6 to I2C function
-//     palSetPadMode(GPIOB, 7, PAL_MODE_ALTERNATE(4) | PAL_STM32_OTYPE_OPENDRAIN | PAL_STM32_PUPDR_PULLUP); // Set B7 to I2C function
+//     wait_ms(10);
+//     palSetPadMode(GPIOB, 6, PAL_MODE_ALTERNATE(4) | PAL_STM32_OTYPE_OPENDRAIN | PAL_STM32_PUPDR_PULLUP);
+//     palSetPadMode(GPIOB, 7, PAL_MODE_ALTERNATE(4) | PAL_STM32_OTYPE_OPENDRAIN | PAL_STM32_PUPDR_PULLUP);
 // }
 
 bool oled_task_user(void) {
-    oled_set_cursor(0, 1);
-    oled_write("Hello word",false);
+    oled_write_P(PSTR("test"), false);
+    // if (is_keyboard_master()) {
+    //     oled_invert(true);
+    // } else {
+    //     oled_invert(true);
+    // }
     return false;
 }
-#endif
+// #endif
