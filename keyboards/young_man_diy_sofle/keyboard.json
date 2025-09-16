@@ -118,7 +118,7 @@
     "features": {
         "bootmagic": true,
         "command": false,
-        "console": false,
+        "console": true,
         "extrakey": true,
         "encoder": true,
         "encoder_map": true,

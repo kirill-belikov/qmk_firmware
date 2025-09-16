@@ -35,6 +35,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 void keyboard_post_init_user(void) {
+    uprintf("START\n");
+
     // wait_ms(200);  // let OLED power up
     // uprintf("Starting I2C scan...\n");
 
@@ -55,29 +57,53 @@ void keyboard_post_init_user(void) {
     // i2c_init();
 
 
-    wait_ms(200);
-    uprintf("pre-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
-            palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+    // wait_ms(200);
+    // uprintf("pre-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+    //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
 
-    i2c_init();
+    // i2c_init();
 
-    for (uint8_t addr = 0x08; addr < 0x78; addr++) {
-        uint8_t data = 0;
-        i2c_status_t res = i2c_receive(addr, &data, 1, 100);
-        uprintf("Addr 0x%02X => %d\n", addr, res);
+    // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
+    //     uint8_t data = 0;
+    //     i2c_status_t res = i2c_receive(addr, &data, 1, 100);
+    //     uprintf("Addr 0x%02X => %d\n", addr, res);
+    // }
+
+    // // perform a probe (try just 0x3C)
+    // uint8_t data = 0;
+    // // i2c_status_t res = i2c_receive(0x3C, &data, 1, 100);
+    // i2c_status_t res = i2c_receive(0x3D, &data, 1, 100);    
+    // uprintf("i2c_receive => %d\n", res);
+
+    // uprintf("post-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+    //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+
+    uprintf("pre-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
+        palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
+
+    // Initialize SPI
+    spi_init();
+
+    // Set SPI pins (PA5: SCK, PA7: MOSI)
+    palSetPadMode(GPIOA, 5, PAL_MODE_ALTERNATE(0)); // SCK
+    palSetPadMode(GPIOA, 7, PAL_MODE_ALTERNATE(0)); // MOSI
+
+    // Test SPI by sending SSD1306 init command
+    uint8_t init_cmd[] = {0xAE}; // Display OFF command
+    bool success = spi_start(NULL, false); // No CS pin
+    if (success) {
+        spi_write(init_cmd[0]);
+        spi_stop();
+        uprintf("SPI write success\n");
+    } else {
+        uprintf("SPI start failed\n");
     }
 
-    // perform a probe (try just 0x3C)
-    uint8_t data = 0;
-    // i2c_status_t res = i2c_receive(0x3C, &data, 1, 100);
-    i2c_status_t res = i2c_receive(0x3D, &data, 1, 100);    
-    uprintf("i2c_receive => %d\n", res);
-
-    uprintf("post-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
-            palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+    uprintf("post-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
+            palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
 
 
-    uprintf("Done\n");
+    uprintf("FINISH\n");
 }
 
 #ifdef ENCODER_MAP_ENABLE
