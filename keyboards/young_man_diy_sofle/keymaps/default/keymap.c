@@ -1,7 +1,5 @@
 #include QMK_KEYBOARD_H
 #include "quantum.h"
-#include "i2c_master.h"   // needed for i2c_start()
-#include "print.h"        // needed for uprintf()
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(
@@ -34,88 +32,88 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     )
 };
 
+#ifdef ENCODER_MAP_ENABLE
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+    [0] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(UG_VALU, UG_VALD)},
+    [1] = {ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______)}, 
+    [2] = {ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______)}, 
+    [3] = {ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______)}
+};
+#endif
+
+#ifdef OLED_ENABLE
 void keyboard_post_init_user(void) {
     uprintf("START\n");
 
-    // wait_ms(200);  // let OLED power up
-    // uprintf("Starting I2C scan...\n");
+//     // wait_ms(200);  // let OLED power up
+//     // uprintf("Starting I2C scan...\n");
 
 
-    // Ensure bus is initialized
-    // i2c_init();
+//     // Ensure bus is initialized
+//     // i2c_init();
 
-    // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
-    //     uint8_t data = 0;
-    //     // Try to read 1 byte – many devices NACK, but responding is enough
-    //     if (i2c_receive(addr, &data, 1, 100) == I2C_STATUS_SUCCESS) {
-    //         uprintf("Found device at 0x%02X\n", addr);
-    //     }
-    // }
-
-
-    // // Ensure bus is initialized
-    // i2c_init();
+//     // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
+//     //     uint8_t data = 0;
+//     //     // Try to read 1 byte – many devices NACK, but responding is enough
+//     //     if (i2c_receive(addr, &data, 1, 100) == I2C_STATUS_SUCCESS) {
+//     //         uprintf("Found device at 0x%02X\n", addr);
+//     //     }
+//     // }
 
 
-    // wait_ms(200);
-    // uprintf("pre-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
-    //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+//     // // Ensure bus is initialized
+//     // i2c_init();
 
-    // i2c_init();
 
-    // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
-    //     uint8_t data = 0;
-    //     i2c_status_t res = i2c_receive(addr, &data, 1, 100);
-    //     uprintf("Addr 0x%02X => %d\n", addr, res);
-    // }
+//     // wait_ms(200);
+//     // uprintf("pre-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+//     //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
 
-    // // perform a probe (try just 0x3C)
-    // uint8_t data = 0;
-    // // i2c_status_t res = i2c_receive(0x3C, &data, 1, 100);
-    // i2c_status_t res = i2c_receive(0x3D, &data, 1, 100);    
-    // uprintf("i2c_receive => %d\n", res);
+//     // i2c_init();
 
-    // uprintf("post-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
-    //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
+//     // for (uint8_t addr = 0x08; addr < 0x78; addr++) {
+//     //     uint8_t data = 0;
+//     //     i2c_status_t res = i2c_receive(addr, &data, 1, 100);
+//     //     uprintf("Addr 0x%02X => %d\n", addr, res);
+//     // }
 
-    uprintf("pre-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
-        palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
+//     // // perform a probe (try just 0x3C)
+//     // uint8_t data = 0;
+//     // // i2c_status_t res = i2c_receive(0x3C, &data, 1, 100);
+//     // i2c_status_t res = i2c_receive(0x3D, &data, 1, 100);    
+//     // uprintf("i2c_receive => %d\n", res);
 
-    // Initialize SPI
-    spi_init();
+//     // uprintf("post-i2c SCL(PB6)=%ld SDA(PB7)=%ld\n",
+//     //         palReadPad(GPIOB, 6), palReadPad(GPIOB, 7));
 
-    // Set SPI pins (PA5: SCK, PA7: MOSI)
-    palSetPadMode(GPIOA, 5, PAL_MODE_ALTERNATE(0)); // SCK
-    palSetPadMode(GPIOA, 7, PAL_MODE_ALTERNATE(0)); // MOSI
+//     uprintf("pre-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
+//         palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
 
-    // Test SPI by sending SSD1306 init command
-    uint8_t init_cmd[] = {0xAE}; // Display OFF command
-    bool success = spi_start(NULL, false); // No CS pin
-    if (success) {
-        spi_write(init_cmd[0]);
-        spi_stop();
-        uprintf("SPI write success\n");
-    } else {
-        uprintf("SPI start failed\n");
-    }
+//     // Initialize SPI
+//     spi_init();
 
-    uprintf("post-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
-            palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
+//     // Set SPI pins (PA5: SCK, PA7: MOSI)
+//     palSetPadMode(GPIOA, 5, PAL_MODE_ALTERNATE(0)); // SCK
+//     palSetPadMode(GPIOA, 7, PAL_MODE_ALTERNATE(0)); // MOSI
+
+//     // Test SPI by sending SSD1306 init command
+//     uint8_t init_cmd[] = {0xAE}; // Display OFF command
+//     bool success = spi_start(NULL, false); // No CS pin
+//     if (success) {
+//         spi_write(init_cmd[0]);
+//         spi_stop();
+//         uprintf("SPI write success\n");
+//     } else {
+//         uprintf("SPI start failed\n");
+//     }
+
+//     uprintf("post-spi SCK(PA5)=%ld MOSI(PA7)=%ld\n",
+//             palReadPad(GPIOA, 5), palReadPad(GPIOA, 7));
 
 
     uprintf("FINISH\n");
 }
 
-#ifdef ENCODER_MAP_ENABLE
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [0] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU), ENCODER_CCW_CW(UG_VALU, UG_VALD)},
-    [1] = {ENCODER_CCW_CW(KC_3,    KC_4),    ENCODER_CCW_CW(KC_5,    KC_6)}, 
-    [2] = {ENCODER_CCW_CW(KC_7,    KC_8),    ENCODER_CCW_CW(KC_9,    KC_0)}, 
-    [3] = {ENCODER_CCW_CW(_______, _______), ENCODER_CCW_CW(_______, _______)}
-};
-#endif
-
-// #ifdef OLED_ENABLE
 // void i2c_init(void) {
 //     gpio_set_pin_input(B6);
 //     gpio_set_pin_input(B7);
@@ -125,12 +123,27 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 // }
 
 bool oled_task_user(void) {
-    oled_write_P(PSTR("test"), false);
-    // if (is_keyboard_master()) {
-    //     oled_invert(true);
-    // } else {
-    //     oled_invert(true);
-    // }
+    uprintf("oled_task_user\n");
+//     oled_write_P(PSTR("test"), false);
+//     // if (is_keyboard_master()) {
+//     //     oled_invert(true);
+//     // } else {
+//     //     oled_invert(true);
+//     // }
+//     return false;
+}
+
+bool oled_task_kb(void) {
+    uprintf("oled_task_kb\n");
+    if (!oled_task_user()) {
+        return false;
+    }
+    if (is_keyboard_master()) {
+        oled_write_P(PSTR("MASTER"), false);
+    } else {
+        oled_write_P(PSTR("SLAVE\n"), false);
+    }
     return false;
 }
-// #endif
+
+#endif
