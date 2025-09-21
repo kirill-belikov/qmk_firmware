@@ -8,6 +8,15 @@
         "vid": "0xFFFF",
         "device_version": "0.0.1"
     },
+    "features": {
+        "bootmagic": true,
+        "command": false,
+        "console": false,
+        "extrakey": true,
+        "encoder": true,
+        "encoder_map": true,
+        "rgb_matrix": true
+    },
     "build": {
         "lto": true
     },
@@ -18,7 +27,7 @@
     },
     "encoder": {
         "rotary": [
-            {"pin_a": "A0", "pin_b": "A1"}
+            {"pin_a": "A1", "pin_b": "A0", "resolution": 2}
         ]
     },
     "split": {
@@ -35,7 +44,7 @@
         "encoder": {
             "right": {
                 "rotary": [
-                    {"pin_a": "A0", "pin_b": "A1"}
+                    {"pin_a": "A0", "pin_b": "A1", "resolution": 2}
                 ]
             }
         }
@@ -114,15 +123,6 @@
                 {"matrix": [9, 5], "x": 11, "y": 4}
             ]
         }
-    },
-    "features": {
-        "bootmagic": true,
-        "command": false,
-        "console": true,
-        "extrakey": true,
-        "encoder": true,
-        "encoder_map": true,
-        "rgb_matrix": true
     },
     "ws2812": {
         "pin": "B15"
