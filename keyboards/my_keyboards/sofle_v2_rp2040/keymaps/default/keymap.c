@@ -290,7 +290,7 @@ void draw_bongocat_frame(int framenumber) {
 }
 
 bool is_new_tap(void) {
-    static matrix_row_t old_matrix[MATRIX_ROWS] = { 0 };
+    static matrix_row_t old_matrix[MATRIX_ROWS] = { 0, 0, 0, 0, 0, 0, 0 };
     bool new_tap = false;
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         if (matrix[i] > old_matrix[i]) {
@@ -342,13 +342,15 @@ void draw_bongocat(void) {
 }
 
 bool oled_task_user(void) {
-    if (OLED_redraw) {
-        oled_clear();
-        last_bongo_frame = 12;
-        draw_bongo_table();
-        OLED_redraw = false;
+    if (!is_keyboard_left()) {
+        if (OLED_redraw) {
+            oled_clear();
+            last_bongo_frame = 12;
+            draw_bongo_table();
+            OLED_redraw = false;
+        }
+        draw_bongocat();
     }
-    draw_bongocat();
     return false;
 }
 

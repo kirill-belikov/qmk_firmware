@@ -18,8 +18,7 @@
         "nkro": true,
         "encoder": true,
         "encoder_map": true,
-        "oled": true,
-        "wpm": true
+        "oled": true
     },
     "build": {
         "lto": true
