@@ -41,12 +41,14 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #endif
 
 #ifdef OLED_ENABLE
+
+/* Bongocat animation copied from the evo70 by customMK, slight modifications to make it standalone */
 #include "matrix.h"
 #include OLED_FONT_H
 
 extern matrix_row_t matrix[MATRIX_ROWS];
 
-#define ANIM_FRAME_DURATION 100
+#define ANIM_FRAME_DURATION 75
 #define IDLE_FRAMES 5
 #define IDLE_TIMEOUT 750
 #define SLEEP_TIMEOUT 15000
@@ -119,54 +121,54 @@ static const uint8_t bongofont[] PROGMEM = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-static const uint8_t bongo_line_x[] = {51, 49, 48, 57};
-static const uint8_t bongo_line_y[] = {0, 8, 16, 24};
-static const uint8_t bongo_line_len[] = {5, 7, 8, 6};
+static const uint8_t bongo_line_x[] = { 51, 49, 48, 57 };
+static const uint8_t bongo_line_y[] = { 0, 8, 16, 24 };
+static const uint8_t bongo_line_len[] = { 5, 7, 8, 6 };
 
 const uint8_t bongo_line_data[8][26] PROGMEM = {
-    { //idle1
+    { //  idle1
         60, 52, 19, 30, 35,
         22, 47, 51, 60, 9, 0, 17,
         1, 57, 33, 3, 27, 41, 29, 50,
         45, 36, 60, 60, 60, 60
     },
-    { //idle2
+    { // idle2
         60, 52, 19, 30, 35,
         22, 47, 51, 60, 9, 0, 17,
         1, 57, 33, 3, 27, 41, 29, 50,
         45, 36, 60, 60, 60, 60
     },
-    { //idle3
+    { // idle3
         60, 53, 14, 31, 23,
         15, 43, 60, 60, 54, 5, 13,
         7, 56, 24, 2, 26, 39, 29, 50,
         45, 36, 60, 60, 60, 60
     },
-    { //idle4
+    { // idle4
         6, 52, 19, 38, 32,
         20, 47, 51, 60, 9, 0, 17,
         8, 57, 33, 3, 27, 41, 29, 50,
         45, 36, 60, 60, 60, 60
     },
-    { //idle5
+    { // idle5
         60, 52, 19, 37, 40,
         21, 47, 51, 60, 9, 0, 17,
         8, 57, 33, 3, 27, 41, 29, 50,
         45, 36, 60, 60, 60, 60
     },
-    { //prep
+    { // prep
         6, 52, 19, 38, 32,
         20, 44, 51, 60, 10, 48, 16,
         8, 25, 4, 18, 27, 42, 46, 50,
         60, 60, 60, 60, 60, 60
     },
-    { //tap1
+    { // tap1
         6, 52, 19, 38, 32,
         20, 44, 51, 60, 10, 49, 17,
         8, 25, 4, 18, 27, 41, 28, 11,
         60, 60, 60, 60, 58, 59
     },
-    { //tap2
+    { // tap2
         6, 52, 19, 38, 32,
         20, 47, 51, 60, 10, 48, 16,
         8, 60, 55, 3, 27, 42, 46, 50,
@@ -184,9 +186,9 @@ uint8_t last_bongo_frame = 12;
 
 void write_bongochar_at_pixel_xy(uint8_t x, uint8_t y, uint8_t data, bool invert) {
     uint8_t i, j, temp;
-    for (i = 0; i < 6 ; i++) {
+    for (i = 0; i < 6 ; i++) { // 6 = font width
         temp = pgm_read_byte(&bongofont[data * 6]+i);
-        for (j = 0; j < 8; j++) {
+        for (j = 0; j < 8; j++) { // 8 = font height
             if (temp & 0x01) {
                 oled_write_pixel(x + i, y + j, !invert);
             } else {
@@ -219,7 +221,7 @@ void eval_anim_state(void) {
         case idle:
             if (key_down) {
                 anim_state = tap;
-            } else if (timer_elapsed32(idle_timeout_timer) >= SLEEP_TIMEOUT) {
+            } else if (timer_elapsed32(idle_timeout_timer) >= SLEEP_TIMEOUT) { // prep to idle
                 anim_state = sleep;
                 current_idle_frame = 0;
             }
@@ -227,7 +229,7 @@ void eval_anim_state(void) {
         case prep:
             if (key_down) {
                 anim_state = tap;
-            } else if (timer_elapsed32(idle_timeout_timer) >= IDLE_TIMEOUT) {
+            } else if (timer_elapsed32(idle_timeout_timer) >= IDLE_TIMEOUT) { // prep to idle
                 anim_state = idle;
                 current_idle_frame = 0;
             }
@@ -243,12 +245,13 @@ void eval_anim_state(void) {
     }
 }
 
-
+// draws the table edge for bongocat, this edge doesn't change during the animation
 void draw_bongo_table(void) {
     uint8_t i;
     uint8_t y = 31;
     uint8_t j = 0;
     for (i = 17; i < 57; i++) {
+        // every five horizontal pixels, move up one pixel to make a diagonal line
         oled_write_pixel(i, y, true);
         if (j == 4) {
             --y;
@@ -261,7 +264,7 @@ void draw_bongo_table(void) {
     y=15;
     j=0;
     for (i = 91; i < 128; i++) {
-
+        // every four horizontal pixels, move up one pixel to make a diagonal line
         oled_write_pixel(i, y, true);
         if (j == 3) {
             --y;
@@ -273,6 +276,7 @@ void draw_bongo_table(void) {
 }
 
 void draw_bongocat_frame(int framenumber) {
+    // only redraw if the animation frame has changed
     if (framenumber != last_bongo_frame) {
         last_bongo_frame = framenumber;
         uint8_t i, j, current_bongochar = 0;
@@ -292,6 +296,7 @@ void draw_bongocat_frame(int framenumber) {
 bool is_new_tap(void) {
     static matrix_row_t old_matrix[MATRIX_ROWS] = { 0, 0, 0, 0, 0, 0, 0 };
     bool new_tap = false;
+    // more 1's detected, there was a new tap
     for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
         if (matrix[i] > old_matrix[i]) {
             new_tap = true;
