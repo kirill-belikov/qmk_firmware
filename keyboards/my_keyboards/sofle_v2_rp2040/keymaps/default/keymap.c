@@ -43,9 +43,12 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
 #ifdef OLED_ENABLE
 
 #include "../../../my_animations/bongocat.h"
+#include "../../../my_animations/rotating_cube.h"
 
 bool oled_task_user(void) {
-    if (!is_keyboard_left()) {
+    if (is_keyboard_left()) {
+        draw_rotating_cube();
+    } else {
         draw_bongocat_screen();
     }
     return false;
